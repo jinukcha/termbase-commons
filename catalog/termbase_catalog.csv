@@ -1,0 +1,2 @@
+dataset_slug,title,domain,subdomain,source,source_version,term_format,data_file,hf_repo,license,status,notes
+loinc_multilingual_2_82,LOINC Multilingual Termbase,medicine,laboratory_medicine,LOINC,2.82,wide_csv_gz,data/loinc_terms_multilingual_dedup.csv.gz,termbase-commons/loinc-multilingual-termbase,LOINC License,starter_ready,Official LOINC raw-derived; no MT/LLM/inferred alignment.

@@ -1,0 +1,14 @@
+{
+  "tb_ab_root_present": true,
+  "official_raw_zip_present": true,
+  "old_undedup_wide_csv_absent": true,
+  "dedup_csv_present": true,
+  "optional_label_csv_present": true,
+  "pair_exports_absent": true,
+  "forbidden_columns_absent": true,
+  "loinc_field_type_present": true,
+  "term_type_absent": true,
+  "term_role_absent": true,
+  "locale_term_column_count": 22,
+  "only_locale_columns_use_term_prefix": true
+}

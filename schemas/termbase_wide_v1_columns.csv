@@ -1,0 +1,38 @@
+column,kind,required,description
+entry_id,metadata,yes,Stable row key inside the derived CSV.
+domain,metadata,yes,
+subdomain,metadata,yes,
+category,metadata,yes,
+quality_tier,metadata,yes,
+loinc_field_type,metadata,yes,LOINC source field category after deduplication.
+loinc_source_field,metadata,no,
+term_en_us,locale_term,yes,Source-supplied term for explicit locale column.
+term_ko_kr,locale_term,no,Source-supplied term for explicit locale column.
+term_zh_cn,locale_term,no,Source-supplied term for explicit locale column.
+term_ar_jo,locale_term,no,Source-supplied term for explicit locale column.
+term_cs_cz,locale_term,no,Source-supplied term for explicit locale column.
+term_de_at,locale_term,no,Source-supplied term for explicit locale column.
+term_de_de,locale_term,no,Source-supplied term for explicit locale column.
+term_el_gr,locale_term,no,Source-supplied term for explicit locale column.
+term_es_ar,locale_term,no,Source-supplied term for explicit locale column.
+term_es_es,locale_term,no,Source-supplied term for explicit locale column.
+term_es_mx,locale_term,no,Source-supplied term for explicit locale column.
+term_et_ee,locale_term,no,Source-supplied term for explicit locale column.
+term_fr_be,locale_term,no,Source-supplied term for explicit locale column.
+term_fr_ca,locale_term,no,Source-supplied term for explicit locale column.
+term_fr_fr,locale_term,no,Source-supplied term for explicit locale column.
+term_it_it,locale_term,no,Source-supplied term for explicit locale column.
+term_nl_nl,locale_term,no,Source-supplied term for explicit locale column.
+term_pl_pl,locale_term,no,Source-supplied term for explicit locale column.
+term_pt_br,locale_term,no,Source-supplied term for explicit locale column.
+term_ru_ru,locale_term,no,Source-supplied term for explicit locale column.
+term_tr_tr,locale_term,no,Source-supplied term for explicit locale column.
+term_uk_ua,locale_term,no,Source-supplied term for explicit locale column.
+loinc_refs_count,metadata,no,
+loinc_refs_sample,metadata,no,
+loinc_classes_sample,metadata,no,
+loinc_statuses,metadata,no,
+source_system,metadata,yes,
+source_version,metadata,yes,
+license,metadata,yes,
+note,metadata,no,

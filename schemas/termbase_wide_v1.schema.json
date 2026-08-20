@@ -1,0 +1,276 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Termbase Commons wide multilingual CSV row",
+  "type": "object",
+  "required": [
+    "entry_id",
+    "domain",
+    "subdomain",
+    "category",
+    "quality_tier",
+    "loinc_field_type",
+    "term_en_us",
+    "source_system",
+    "source_version",
+    "license"
+  ],
+  "properties": {
+    "entry_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "domain": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "subdomain": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "category": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "quality_tier": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "loinc_field_type": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "loinc_source_field": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "term_en_us": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "term_ko_kr": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "term_zh_cn": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "term_ar_jo": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "term_cs_cz": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "term_de_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "term_de_de": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "term_el_gr": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "term_es_ar": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "term_es_es": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "term_es_mx": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "term_et_ee": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "term_fr_be": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "term_fr_ca": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "term_fr_fr": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "term_it_it": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "term_nl_nl": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "term_pl_pl": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "term_pt_br": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "term_ru_ru": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "term_tr_tr": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "term_uk_ua": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "loinc_refs_count": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "loinc_refs_sample": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "loinc_classes_sample": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "loinc_statuses": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_system": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_version": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "license": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "note": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "not": {
+    "anyOf": [
+      {
+        "required": [
+          "source_locale"
+        ]
+      },
+      {
+        "required": [
+          "source_term"
+        ]
+      },
+      {
+        "required": [
+          "target_locale"
+        ]
+      },
+      {
+        "required": [
+          "target_term"
+        ]
+      },
+      {
+        "required": [
+          "term_role"
+        ]
+      },
+      {
+        "required": [
+          "term_type"
+        ]
+      }
+    ]
+  },
+  "description": "Wide multilingual termbase schema. Locale terms are stored as term_<language>_<region> columns. Directional source/target fields are not used."
+}

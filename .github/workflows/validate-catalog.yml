@@ -1,0 +1,19 @@
+name: Validate termbase catalog
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  validate-catalog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check catalog exists
+        run: test -f catalog/termbase_catalog.csv
+      - name: Show catalog
+        run: python -c "import csv; rows=list(csv.DictReader(open('catalog/termbase_catalog.csv', encoding='utf-8'))); print('catalog rows=', len(rows)); [print(r.get('title'), r.get('status')) for r in rows]"

@@ -1,0 +1,16 @@
+[
+  {
+    "dataset_slug": "loinc_multilingual_2_82",
+    "title": "LOINC Multilingual Termbase",
+    "domain": "medicine",
+    "subdomain": "laboratory_medicine",
+    "source": "LOINC",
+    "source_version": "2.82",
+    "term_format": "wide_csv_gz",
+    "data_file": "data/loinc_terms_multilingual_dedup.csv.gz",
+    "hf_repo": "termbase-commons/loinc-multilingual-termbase",
+    "license": "LOINC License",
+    "status": "starter_ready",
+    "notes": "Official LOINC raw-derived; no MT/LLM/inferred alignment."
+  }
+]
