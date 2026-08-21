@@ -8,7 +8,7 @@
     "source_version": "2.82",
     "term_format": "wide_csv_gz",
     "data_file": "data/loinc_terms_multilingual_dedup.csv.gz",
-    "hf_repo": "termbase-commons/loinc-multilingual-termbase",
+    "hf_repo": "jinukcha/loinc-multilingual-termbase",
     "license": "LOINC License",
     "status": "starter_ready",
     "notes": "Official LOINC raw-derived; no MT/LLM/inferred alignment."
