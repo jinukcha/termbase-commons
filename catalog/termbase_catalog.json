@@ -7,10 +7,10 @@
     "source": "LOINC",
     "source_version": "2.82",
     "term_format": "wide_csv_gz",
-    "data_file": "data/loinc_terms_multilingual_dedup.csv.gz",
-    "hf_repo": "jinukcha/loinc-multilingual-termbase",
+    "data_file": "data/medicine/loinc/loinc_terms_multilingual_dedup.csv.gz",
+    "hf_repo": "jinukcha/termbase-commons-data",
     "license": "LOINC License",
-    "status": "starter_ready",
+    "status": "active",
     "notes": "Official LOINC raw-derived; no MT/LLM/inferred alignment."
   }
 ]
