@@ -8,7 +8,7 @@
 - Official downloads: https://loinc.org/downloads
 - License: https://loinc.org/license/
 
-## Dataset produced in this starter pack
+## Dataset produced in this collection
 
 The first dataset in this collection is a wide multilingual termbase derived from the official LOINC 2.82 distribution.
 
@@ -33,10 +33,16 @@ Not used:
 
 ## Current public payload
 
+Recommended Hugging Face data hub:
+
+```text
+jinukcha/termbase-commons-data
+```
+
 Recommended Hugging Face data file:
 
 ```text
-data/loinc_terms_multilingual_dedup.csv.gz
+data/medicine/loinc/loinc_terms_multilingual_dedup.csv.gz
 ```
 
 Rows: `192310`
