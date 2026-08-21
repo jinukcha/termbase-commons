@@ -2,12 +2,12 @@
 
 This GitHub repository is the project home for Termbase Commons. Large termbase data files should not be committed directly to this repository.
 
-The actual LOINC termbase data file should be uploaded to a Hugging Face Dataset repository.
+The actual termbase data files should be uploaded to one Hugging Face Dataset data hub.
 
 ## Target dataset repository
 
 ```text
-https://huggingface.co/datasets/jinukcha/loinc-multilingual-termbase
+https://huggingface.co/datasets/jinukcha/termbase-commons-data
 ```
 
 Create it here:
@@ -20,37 +20,48 @@ Recommended settings:
 
 ```text
 Owner: jinukcha
-Repository name: loinc-multilingual-termbase
+Repository name: termbase-commons-data
 Repository type: Dataset
 Visibility: Private first, then Public after validation
-License: Other / LOINC License
+License: Other
+License name: multiple-source-specific-licenses
+License URL: https://raw.githubusercontent.com/jinukcha/termbase-commons/main/DATA_LICENSES.md
 ```
 
 ## Files to upload
 
-From the starter pack, upload the contents of:
+Use the prepared upload package. After extracting it, upload the contents of:
 
 ```text
-huggingface_dataset_repos/loinc-multilingual-termbase/
+termbase-commons-data/
 ```
 
 The Hugging Face dataset repository should contain:
 
 ```text
 README.md
-LOINC_short_license.txt
-LOINC_LICENSE_FULL.txt
-data/loinc_terms_multilingual_dedup.csv.gz
+LICENSES.md
+.gitattributes
+data/medicine/loinc/loinc_terms_multilingual_dedup.csv.gz
+licenses/loinc/LOINC_short_license.txt
+licenses/loinc/LOINC_LICENSE_FULL.txt
+metadata/termbase_catalog.csv
+metadata/termbase_catalog.json
+metadata/license_manifest.csv
+metadata/license_manifest.json
+metadata/source_manifest.csv
+metadata/source_manifest.json
 metadata/loinc_deduplication_report.json
 metadata/loinc_locale_columns.csv
 metadata/loinc_official_field_coverage.csv
 metadata/loinc_validation_report.json
+metadata/package_validation_report.json
 ```
 
-The main downloadable termbase file is:
+The main downloadable LOINC termbase file is:
 
 ```text
-data/loinc_terms_multilingual_dedup.csv.gz
+data/medicine/loinc/loinc_terms_multilingual_dedup.csv.gz
 ```
 
 ## Important wording
