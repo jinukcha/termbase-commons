@@ -14,6 +14,20 @@ The project is intended for translators, localization engineers, CAT tool users,
 - Source license preserved per dataset
 - One downloadable `csv.gz` per termbase whenever possible
 
+## Data hub
+
+Actual termbase payloads are distributed from one Hugging Face Dataset hub:
+
+```text
+Hugging Face Dataset: jinukcha/termbase-commons-data
+```
+
+Expected data hub URL:
+
+```text
+https://huggingface.co/datasets/jinukcha/termbase-commons-data
+```
+
 ## First dataset
 
 The starter dataset is:
@@ -22,22 +36,10 @@ The starter dataset is:
 LOINC Multilingual Termbase
 ```
 
-Recommended data host:
+Recommended data file in the Hugging Face data hub:
 
 ```text
-Hugging Face Dataset: jinukcha/loinc-multilingual-termbase
-```
-
-Recommended data file:
-
-```text
-data/loinc_terms_multilingual_dedup.csv.gz
-```
-
-Expected dataset URL:
-
-```text
-https://huggingface.co/datasets/jinukcha/loinc-multilingual-termbase
+data/medicine/loinc/loinc_terms_multilingual_dedup.csv.gz
 ```
 
 ## Repository roles
@@ -50,11 +52,11 @@ Hugging Face Dataset
 = actual data distribution
 ```
 
-Do not commit large termbase payloads directly to this GitHub repository. Use Hugging Face Dataset repos or GitHub Releases for binary/download assets.
+Do not commit large termbase payloads directly to this GitHub repository. Use the Hugging Face Dataset data hub or GitHub Releases for binary/download assets.
 
 ## Upload guide
 
-See [`HUGGINGFACE_UPLOAD.md`](HUGGINGFACE_UPLOAD.md) for the exact upload steps for the LOINC dataset file.
+See [`HUGGINGFACE_UPLOAD.md`](HUGGINGFACE_UPLOAD.md) for the exact upload steps for the current data hub package.
 
 ## Korean summary
 
@@ -62,4 +64,4 @@ Termbase Commons는 공식 또는 명확하게 라이선스가 확인된 termino
 
 기계번역, LLM 보충, 임베딩 유사도 기반 자동 정렬은 사용하지 않습니다.
 
-실제 단어집 파일은 GitHub에 직접 넣지 않고 Hugging Face Dataset repo에 `csv.gz` 하나로 배포합니다.
+실제 단어집 파일은 GitHub에 직접 넣지 않고 Hugging Face Dataset data hub에 `csv.gz` 파일로 배포합니다.
