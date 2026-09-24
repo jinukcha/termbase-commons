@@ -1,0 +1,34 @@
+name: temporary R0B0E transfer
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/r0b0e-xfer-20260924.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  transfer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download verified short-lived source
+        env:
+          URL: https://release-assets.githubusercontent.com/github-production-release-asset/1335785888/b6125f95-cc84-4a51-8d14-d54c5c5e73c1?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5MDIyMTgxMCwibmJmIjoxNzkwMjIwMDEwLCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ._URWcTgje4tQos-qRDWYxfYqQISAN85nmtuTMT5i6QY&response-content-disposition=attachment%3B+filename%3DWG_E_chat_delivery.zip&response-content-type=application%2Foctet-stream&rscd=attachment%3B+filename%3DWG_E_chat_delivery.zip&rsct=application%2Foctet-stream&se=2026-09-24T04%3A21%3A04Z&sig=as34pHhV6LrpBgW5kMio0kF3AFhcp3b0fiVuP4oVJMY%3D&ske=2026-09-24T04%3A21%3A04Z&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sks=b&skt=2026-09-24T03%3A20%3A10Z&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skv=2018-11-09&sp=r&spr=https&sr=b&sv=2018-11-09
+        run: |
+          set -euo pipefail
+          curl -fL --retry 3 "$URL" -o WG_E_chat_delivery.zip
+          echo '6be062e8bb9d03cfdbc74984a4ee2aaa3200c53cbc9309c926392dcc23c1cdfc  WG_E_chat_delivery.zip' | sha256sum -c -
+          unzip -tqq WG_E_chat_delivery.zip
+
+      - name: Upload temporary connector artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: r0b0e-xfer-7f2c9a
+          path: WG_E_chat_delivery.zip
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
