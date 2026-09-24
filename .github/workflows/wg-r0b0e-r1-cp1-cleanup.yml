@@ -1,0 +1,23 @@
+name: temporary WG R0B0E R1 CP1 cleanup
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/wg-r0b0e-r1-cp1-cleanup.yml
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Delete temporary connector artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api --method DELETE "repos/$GITHUB_REPOSITORY/actions/artifacts/10802499916"
