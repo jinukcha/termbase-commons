@@ -1,0 +1,90 @@
+name: temporary WG OSS R1 transfer
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/wg-oss-r1-xfer-20260925.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  transfer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      SRC_URL_B64: aHR0cHM6Ly9yZWxlYXNlLWFzc2V0cy5naXRodWJ1c2VyY29udGVudC5jb20vZ2l0aHViLXByb2R1Y3Rpb24tcmVsZWFzZS1hc3NldC8xMzM1Nzg1ODg4L2JkMDJiZmQ3LWU3OWUtNDk3ZS1iOTc0LTE2YTBiYWJjMTAzZj9zcD1yJnN2PTIwMTgtMTEtMDkmc3I9YiZzcHI9aHR0cHMmc2U9MjAyNi0wOS0yNFQyMCUzQTQxJTNBNDFaJnJzY2Q9YXR0YWNobWVudCUzQitmaWxlbmFtZSUzRFdHX09TU19SMV9zcmMuemlwJnJzY3Q9YXBwbGljYXRpb24lMkZvY3RldC1zdHJlYW0mc2tvaWQ9OTZjMmQ0MTAtNTcxMS00M2ExLWFlZGQtYWIxOTQ3YWE3YWIwJnNrdGlkPTM5OGE2NjU0LTk5N2ItNDdlOS1iMTJiLTk1MTViODk2YjRkZSZza3Q9MjAyNi0wOS0yNFQxOSUzQTQxJTNBMzRaJnNrZT0yMDI2LTA5LTI0VDIwJTNBNDElM0E0MVomc2tzPWImc2t2PTIwMTgtMTEtMDkmc2lnPWpCM2I5MllIdGQzdFRLdWdxUVBpQ1dRa3glMkYlMkJqT0xpZk16bFhpSSUyRllGZTAlM0Qmand0PWV5SjBlWEFpT2lKS1YxUWlMQ0poYkdjaU9pSklVekkxTmlKOS5leUpwYzNNaU9pSm5hWFJvZFdJdVkyOXRJaXdpWVhWa0lqb2ljbVZzWldGelpTMWhjM05sZEhNdVoybDBhSFZpZFhObGNtTnZiblJsYm5RdVkyOXRJaXdpYTJWNUlqb2lhMlY1TVNJc0ltVjRjQ0k2TVRjNU1ESTRNRFk1TkN3aWJtSm1Jam94Tnprd01qYzRPRGswTENKd1lYUm9Jam9pY21Wc1pXRnpaV0Z6YzJWMGNISnZaSFZqZEdsdmJpNWliRzlpTG1OdmNtVXVkMmx1Wkc5M2N5NXVaWFFpZlEuQXgtUHdpWnhHUFp1UWtWUTF1ZW00Y0xkVjR3LUo5MUZJRXhwVkg0LVBncyZyZXNwb25zZS1jb250ZW50LWRpc3Bvc2l0aW9uPWF0dGFjaG1lbnQlM0IlMjBmaWxlbmFtZSUzRFdHX09TU19SMV9zcmMuemlwJnJlc3BvbnNlLWNvbnRlbnQtdHlwZT1hcHBsaWNhdGlvbiUyRm9jdGV0LXN0cmVhbQ==
+      PATCH_URL_B64: aHR0cHM6Ly9yZWxlYXNlLWFzc2V0cy5naXRodWJ1c2VyY29udGVudC5jb20vZ2l0aHViLXByb2R1Y3Rpb24tcmVsZWFzZS1hc3NldC8xMzM1Nzg1ODg4LzQ0ZTdlZWE2LTQ1ZTItNDAwOC1hOTU1LTI3MTRlMDBlNjQ4Mj9zcD1yJnN2PTIwMTgtMTEtMDkmc3I9YiZzcHI9aHR0cHMmc2U9MjAyNi0wOS0yNFQyMCUzQTQyJTNBMDVaJnJzY2Q9YXR0YWNobWVudCUzQitmaWxlbmFtZSUzRFdHX09TU19SMV9wYXRjaC56aXAmcnNjdD1hcHBsaWNhdGlvbiUyRm9jdGV0LXN0cmVhbSZza29pZD05NmMyZDQxMC01NzExLTQzYTEtYWVkZC1hYjE5NDdhYTdhYjAmc2t0aWQ9Mzk4YTY2NTQtOTk3Yi00N2U5LWIxMmItOTUxNWI4OTZiNGRlJnNrdD0yMDI2LTA5LTI0VDE5JTNBNDElM0EzNVomc2tlPTIwMjYtMDktMjRUMjAlM0E0MiUzQTA1WiZza3M9YiZza3Y9MjAxOC0xMS0wOSZzaWc9bmpvR2h6dHpad1MzYzRMRGRERUNZUjQ3bnRTZHRtQ1NLWWsxanhldVNrbyUzRCZqd3Q9ZXlKMGVYQWlPaUpLVjFRaUxDSmhiR2NpT2lKSVV6STFOaUo5LmV5SnBjM01pT2lKbmFYUm9kV0l1WTI5dElpd2lZWFZrSWpvaWNtVnNaV0Z6WlMxaGMzTmxkSE11WjJsMGFIVmlkWE5sY21OdmJuUmxiblF1WTI5dElpd2lhMlY1SWpvaWEyVjVNU0lzSW1WNGNDSTZNVGM1TURJNE1EWTVOU3dpYm1KbUlqb3hOemt3TWpjNE9EazFMQ0p3WVhSb0lqb2ljbVZzWldGelpXRnpjMlYwY0hKdlpIVmpkR2x2Ymk1aWJHOWlMbU52Y21VdWQybHVaRzkzY3k1dVpYUWlmUS5LTXJzby0yLUQtZFllYVFtQ1FXQkkwTVRTNFJYeG1Tc2swM2pVQ1pDVTB3JnJlc3BvbnNlLWNvbnRlbnQtZGlzcG9zaXRpb249YXR0YWNobWVudCUzQiUyMGZpbGVuYW1lJTNEV0dfT1NTX1IxX3BhdGNoLnppcCZyZXNwb25zZS1jb250ZW50LXR5cGU9YXBwbGljYXRpb24lMkZvY3RldC1zdHJlYW0=
+      FULL_URL_B64: aHR0cHM6Ly9yZWxlYXNlLWFzc2V0cy5naXRodWJ1c2VyY29udGVudC5jb20vZ2l0aHViLXByb2R1Y3Rpb24tcmVsZWFzZS1hc3NldC8xMzM1Nzg1ODg4LzhlZGRmMjJiLThmODItNGExMi1iZTQ2LWNkYzliOGQyNmM4Nj9zcD1yJnN2PTIwMTgtMTEtMDkmc3I9YiZzcHI9aHR0cHMmc2U9MjAyNi0wOS0yNFQyMCUzQTMwJTNBNTZaJnJzY2Q9YXR0YWNobWVudCUzQitmaWxlbmFtZSUzRFdHX09TU19SMV9mdWxsLnppcCZyc2N0PWFwcGxpY2F0aW9uJTJGb2N0ZXQtc3RyZWFtJnNrb2lkPTk2YzJkNDEwLTU3MTEtNDNhMS1hZWRkLWFiMTk0N2FhN2FiMCZza3RpZD0zOThhNjY1NC05OTdiLTQ3ZTktYjEyYi05NTE1Yjg5NmI0ZGUmc2t0PTIwMjYtMDktMjRUMTklM0EzMCUzQTAxWiZza2U9MjAyNi0wOS0yNFQyMCUzQTMwJTNBNTZaJnNrcz1iJnNrdj0yMDE4LTExLTA5JnNpZz16UlMlMkJNbElCSG84OWU4TTV6TmNQaE95dTJ4bEJlSjc3JTJCZjljTjc3MnF4USUzRCZqd3Q9ZXlKMGVYQWlPaUpLVjFRaUxDSmhiR2NpT2lKSVV6STFOaUo5LmV5SnBjM01pT2lKbmFYUm9kV0l1WTI5dElpd2lZWFZrSWpvaWNtVnNaV0Z6WlMxaGMzTmxkSE11WjJsMGFIVmlkWE5sY21OdmJuUmxiblF1WTI5dElpd2lhMlY1SWpvaWEyVjVNU0lzSW1WNGNDSTZNVGM1TURJNE1EWTVOaXdpYm1KbUlqb3hOemt3TWpjNE9EazJMQ0p3WVhSb0lqb2ljbVZzWldGelpXRnpjMlYwY0hKdlpIVmpkR2x2Ymk1aWJHOWlMbU52Y21VdWQybHVaRzkzY3k1dVpYUWlmUS5ZTl9YQkI0Y0owUEVZejhiR0xXclNaTWswR2JNZ3hSeHBJR3paNEJDSUowJnJlc3BvbnNlLWNvbnRlbnQtZGlzcG9zaXRpb249YXR0YWNobWVudCUzQiUyMGZpbGVuYW1lJTNEV0dfT1NTX1IxX2Z1bGwuemlwJnJlc3BvbnNlLWNvbnRlbnQtdHlwZT1hcHBsaWNhdGlvbiUyRm9jdGV0LXN0cmVhbQ==
+      KIT_URL_B64: aHR0cHM6Ly9yZWxlYXNlLWFzc2V0cy5naXRodWJ1c2VyY29udGVudC5jb20vZ2l0aHViLXByb2R1Y3Rpb24tcmVsZWFzZS1hc3NldC8xMzM1Nzg1ODg4L2NkZDYwYmQwLTc3NjYtNDg3NS04MGI2LTcxYWFmZDgzMTVkOT9zcD1yJnN2PTIwMTgtMTEtMDkmc3I9YiZzcHI9aHR0cHMmc2U9MjAyNi0wOS0yNFQyMCUzQTIyJTNBNTJaJnJzY2Q9YXR0YWNobWVudCUzQitmaWxlbmFtZSUzRFdHX09TU19SMV9raXQuemlwJnJzY3Q9YXBwbGljYXRpb24lMkZvY3RldC1zdHJlYW0mc2tvaWQ9OTZjMmQ0MTAtNTcxMS00M2ExLWFlZGQtYWIxOTQ3YWE3YWIwJnNrdGlkPTM5OGE2NjU0LTk5N2ItNDdlOS1iMTJiLTk1MTViODk2YjRkZSZza3Q9MjAyNi0wOS0yNFQxOSUzQTIyJTNBMDlaJnNrZT0yMDI2LTA5LTI0VDIwJTNBMjIlM0E1Mlomc2tzPWImc2t2PTIwMTgtMTEtMDkmc2lnPXZwMGcxdWJoR1dSSFQwODd4WHZ1VlVpJTJGc0VnZGpRdkpDV2VOT0dQMnhFSSUzRCZqd3Q9ZXlKMGVYQWlPaUpLVjFRaUxDSmhiR2NpT2lKSVV6STFOaUo5LmV5SnBjM01pT2lKbmFYUm9kV0l1WTI5dElpd2lZWFZrSWpvaWNtVnNaV0Z6WlMxaGMzTmxkSE11WjJsMGFIVmlkWE5sY21OdmJuUmxiblF1WTI5dElpd2lhMlY1SWpvaWEyVjVNU0lzSW1WNGNDSTZNVGM1TURJNE1EWTVOaXdpYm1KbUlqb3hOemt3TWpjNE9EazJMQ0p3WVhSb0lqb2ljbVZzWldGelpXRnpjMlYwY0hKdlpIVmpkR2x2Ymk1aWJHOWlMbU52Y21VdWQybHVaRzkzY3k1dVpYUWlmUS5ZTl9YQkI0Y0owUEVZejhiR0xXclNaTWswR2JNZ3hSeHBJR3paNEJDSUowJnJlc3BvbnNlLWNvbnRlbnQtZGlzcG9zaXRpb249YXR0YWNobWVudCUzQiUyMGZpbGVuYW1lJTNEV0dfT1NTX1IxX2tpdC56aXAmcmVzcG9uc2UtY29udGVudC10eXBlPWFwcGxpY2F0aW9uJTJGb2N0ZXQtc3RyZWFt
+      STATUS_URL_B64: aHR0cHM6Ly9yZWxlYXNlLWFzc2V0cy5naXRodWJ1c2VyY29udGVudC5jb20vZ2l0aHViLXByb2R1Y3Rpb24tcmVsZWFzZS1hc3NldC8xMzM1Nzg1ODg4LzVhMzJjOTVkLTQ4YjQtNDRjYy1iZjhiLWQ3Njc4YTAxNjU5OD9zcD1yJnN2PTIwMTgtMTEtMDkmc3I9YiZzcHI9aHR0cHMmc2U9MjAyNi0wOS0yNFQyMCUzQTIxJTNBNDhaJnJzY2Q9YXR0YWNobWVudCUzQitmaWxlbmFtZSUzRFdHX0NVUlJFTlRfU1RBVFVTLm1kJnJzY3Q9YXBwbGljYXRpb24lMkZvY3RldC1zdHJlYW0mc2tvaWQ9OTZjMmQ0MTAtNTcxMS00M2ExLWFlZGQtYWIxOTQ3YWE3YWIwJnNrdGlkPTM5OGE2NjU0LTk5N2ItNDdlOS1iMTJiLTk1MTViODk2YjRkZSZza3Q9MjAyNi0wOS0yNFQxOSUzQTIxJTNBMjRaJnNrZT0yMDI2LTA5LTI0VDIwJTNBMjElM0E0OFomc2tzPWImc2t2PTIwMTgtMTEtMDkmc2lnPW5xZGxsTE1aRiUyRm5ETjlCNWhIVEM5JTJCWEVhWHhLUW9UUUplSWVEUFlwaEJrJTNEJmp3dD1leUowZVhBaU9pSktWMVFpTENKaGJHY2lPaUpJVXpJMU5pSjkuZXlKcGMzTWlPaUpuYVhSb2RXSXVZMjl0SWl3aVlYVmtJam9pY21Wc1pXRnpaUzFoYzNObGRITXVaMmwwYUhWaWRYTmxjbU52Ym5SbGJuUXVZMjl0SWl3aWEyVjVJam9pYTJWNU1TSXNJbVY0Y0NJNk1UYzVNREkzT1RFNU55d2libUptSWpveE56a3dNamM0T0RrM0xDSndZWFJvSWpvaWNtVnNaV0Z6WldGemMyVjBjSEp2WkhWamRHbHZiaTVpYkc5aUxtTnZjbVV1ZDJsdVpHOTNjeTV1WlhRaWZRLktoMUgxSE5ucFhuVnJBOWxQN2xxcnJRV3JCZVA2elBLaGw4blE5dG1ZUzAmcmVzcG9uc2UtY29udGVudC1kaXNwb3NpdGlvbj1hdHRhY2htZW50JTNCJTIwZmlsZW5hbWUlM0RXR19DVVJSRU5UX1NUQVRVUy5tZCZyZXNwb25zZS1jb250ZW50LXR5cGU9YXBwbGljYXRpb24lMkZvY3RldC1zdHJlYW0=
+
+    steps:
+      - name: Download and verify source
+        run: |
+          set -euo pipefail
+          printf '%s' "$SRC_URL_B64" | base64 -d | xargs -r curl -fL --retry 3 -o WG_OSS_R1_src.zip
+          echo '38503133e78798a4aeb7180304386da500ebad71ce32c26c15aad2853dcd1948  WG_OSS_R1_src.zip' | sha256sum -c -
+          unzip -tqq WG_OSS_R1_src.zip
+      - name: Download and verify patch
+        run: |
+          set -euo pipefail
+          printf '%s' "$PATCH_URL_B64" | base64 -d | xargs -r curl -fL --retry 3 -o WG_OSS_R1_patch.zip
+          echo 'cc5395a35cdc18c61dea6436e8ae1229fa5334f904a289ccf892e9300cde5c80  WG_OSS_R1_patch.zip' | sha256sum -c -
+          unzip -tqq WG_OSS_R1_patch.zip
+      - name: Download and verify full
+        run: |
+          set -euo pipefail
+          printf '%s' "$FULL_URL_B64" | base64 -d | xargs -r curl -fL --retry 3 -o WG_OSS_R1_full.zip
+          echo 'ae91c52fc8946b70537b50410f3ef643aab7eab1a482b08f2c8b76f6181dd383  WG_OSS_R1_full.zip' | sha256sum -c -
+          unzip -tqq WG_OSS_R1_full.zip
+      - name: Download and verify kit
+        run: |
+          set -euo pipefail
+          printf '%s' "$KIT_URL_B64" | base64 -d | xargs -r curl -fL --retry 3 -o WG_OSS_R1_kit.zip
+          echo '28ff827c31a013625640b847902d9140fcea5bbf7e9c57b5857bf1c431227f65  WG_OSS_R1_kit.zip' | sha256sum -c -
+          unzip -tqq WG_OSS_R1_kit.zip
+      - name: Download and verify current status
+        run: |
+          set -euo pipefail
+          printf '%s' "$STATUS_URL_B64" | base64 -d | xargs -r curl -fL --retry 3 -o WG_CURRENT_STATUS.md
+          echo '32979cd8efbb4a50fbbc6e0e01ca124c09d1acd0bb55369a7be18c81b25c73bc  WG_CURRENT_STATUS.md' | sha256sum -c -
+
+      - name: Upload source transfer
+        uses: actions/upload-artifact@v4
+        with:
+          name: wg-oss-r1-src-xfer
+          path: WG_OSS_R1_src.zip
+          retention-days: 1
+          compression-level: 0
+      - name: Upload patch transfer
+        uses: actions/upload-artifact@v4
+        with:
+          name: wg-oss-r1-patch-xfer
+          path: WG_OSS_R1_patch.zip
+          retention-days: 1
+          compression-level: 0
+      - name: Upload full transfer
+        uses: actions/upload-artifact@v4
+        with:
+          name: wg-oss-r1-full-xfer
+          path: WG_OSS_R1_full.zip
+          retention-days: 1
+          compression-level: 0
+      - name: Upload kit transfer
+        uses: actions/upload-artifact@v4
+        with:
+          name: wg-oss-r1-kit-xfer
+          path: WG_OSS_R1_kit.zip
+          retention-days: 1
+          compression-level: 0
+      - name: Upload status transfer
+        uses: actions/upload-artifact@v4
+        with:
+          name: wg-oss-r1-status-xfer
+          path: WG_CURRENT_STATUS.md
+          retention-days: 1
+          compression-level: 0
