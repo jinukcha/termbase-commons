@@ -15,7 +15,7 @@ jobs:
   transfer:
     runs-on: ubuntu-latest
     steps:
-      - name: Download and verify CP1 delivery
+      - name: Download, verify, and reopen CP1 delivery
         env:
           URL_B64: aHR0cHM6Ly9yZWxlYXNlLWFzc2V0cy5naXRodWJ1c2VyY29udGVudC5jb20vZ2l0aHViLXByb2R1Y3Rpb24tcmVsZWFzZS1hc3NldC8xMzM1Nzg1ODg4LzI4YjNkMWIxLTE5MTYtNDQ4Zi04NjI0LTcxYmExZWJhMmQwND9zcD1yJnN2PTIwMTgtMTEtMDkmc3I9YiZzcHI9aHR0cHMmc2U9MjAyNi0wOS0yNFQwOSUzQTM4JTNBMDVaJnJzY2Q9YXR0YWNobWVudCUzQitmaWxlbmFtZSUzRFdHX0VfUjFDMV9kZWxpdmVyeS56aXAmcnNjdD1hcHBsaWNhdGlvbiUyRm9jdGV0LXN0cmVhbSZza29pZD05NmMyZDQxMC01NzExLTQzYTEtYWVkZC1hYjE5NDdhYTdhYjAmc2t0aWQ9Mzk4YTY2NTQtOTk3Yi00N2U5LWIxMmItOTUxNWI4OTZiNGRlJnNrdD0yMDI2LTA5LTI0VDA4JTNBMzclM0ExMFomc2tlPTIwMjYtMDktMjRUMDklM0EzOCUzQTA1WiZza3M9YiZza3Y9MjAxOC0xMS0wOSZzaWc9VHZqTHpjakp6ZVZVSVIwSHVuNkhNcXFMVDNndXZHbyUyRnlyVmtZbFhhcWNnJTNEJmp3dD1leUowZVhBaU9pSktWMVFpTENKaGJHY2lPaUpJVXpJMU5pSjkuZXlKcGMzTWlPaUpuYVhSb2RXSXVZMjl0SWl3aVlYVmtJam9pY21Wc1pXRnpaUzFoYzNObGRITXVaMmwwYUhWaWRYTmxjbU52Ym5SbGJuUXVZMjl0SWl3aWEyVjVJam9pYTJWNU1TSXNJbVY0Y0NJNk1UYzVNREkwTXpNME5Dd2libUptSWpveE56a3dNak01TnpRMExDSndZWFJvSWpvaWNtVnNaV0Z6WldGemMyVjBjSEp2WkhWamRHbHZiaTVpYkc5aUxtTnZjbVV1ZDJsdVpHOTNjeTV1WlhRaWZRLmdNcXlONnl5RG82VzFfT3VhTzZxb2d6ZENld0Jwak82cDhfbk1qVnNUVXMmcmVzcG9uc2UtY29udGVudC1kaXNwb3NpdGlvbj1hdHRhY2htZW50JTNCJTIwZmlsZW5hbWUlM0RXR19FX1IxQzFfZGVsaXZlcnkuemlwJnJlc3BvbnNlLWNvbnRlbnQtdHlwZT1hcHBsaWNhdGlvbiUyRm9jdGV0LXN0cmVhbQ==
         run: |
@@ -24,12 +24,18 @@ jobs:
           curl -fL --retry 4 --retry-all-errors "$URL" -o WG_E_R1C1_delivery.zip
           echo 'ed9d3a4bf97ecc76a69f4a43d3d53ae91ebaeed4003a7100e5e804810d6ba0e4  WG_E_R1C1_delivery.zip' | sha256sum -c -
           unzip -tqq WG_E_R1C1_delivery.zip
+          mkdir -p payload
+          unzip -q WG_E_R1C1_delivery.zip -d payload
+          for z in payload/packages/pre/*.zip payload/packages/final/*.zip; do unzip -tqq "$z"; done
+          test -f payload/project/R0B0E_R1_CP1_CHECK.json
+          test -f payload/project/R0B0E_R1_CP1_REPORT.md
+          test -f payload/evidence/R0B0E_R1_CP1_VALIDATION.json
 
-      - name: Upload temporary connector artifact
+      - name: Upload unpacked connector artifact
         uses: actions/upload-artifact@v4
         with:
-          name: wg-e-r1c1-xfer-20260924
-          path: WG_E_R1C1_delivery.zip
+          name: wg-e-r1c1-unpacked-20260924
+          path: payload/
           if-no-files-found: error
           retention-days: 1
           compression-level: 0
