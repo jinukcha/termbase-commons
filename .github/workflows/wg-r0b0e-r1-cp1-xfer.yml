@@ -1,0 +1,54 @@
+name: temporary WG R0B0E R1 CP1 transfer
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/wg-r0b0e-r1-cp1-xfer.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  transfer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out temporary pointer
+        uses: actions/checkout@v4
+
+      - name: Download and reopen verified private delivery
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL="$(base64 -d tmp/wg-r0b0e-r1-cp1-transfer-url.b64)"
+          curl -fL --retry 4 --retry-all-errors "$URL" -o WG_E_R1_CP1_delivery.zip
+          echo '8d850b1c73c843b9699fa05e955fc6ec94e34a87ce9c868580e0064d3f243e8d  WG_E_R1_CP1_delivery.zip' | sha256sum -c -
+          unzip -tqq WG_E_R1_CP1_delivery.zip
+          mkdir export
+          unzip -q WG_E_R1_CP1_delivery.zip -d export
+          test -f export/WG_E_R1_CP1_src.zip
+          test -f export/WG_E_R1_CP1_patch.zip
+          test -f export/WG_E_R1_CP1_full.zip
+          test -f export/R0B0E_R1_CP1_CHECK.json
+          test -f export/BODY_VISIBLE_front.png
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          check = json.loads(Path('export/R0B0E_R1_CP1_CHECK.json').read_text(encoding='utf-8'))
+          assert check['status'] == 'R0B0E_R1_CP1_ACCEPTED'
+          assert check['milestone_complete'] is True
+          assert check['failures'] == []
+          assert Path('export/BODY_VISIBLE_front.png').read_bytes().startswith(b'\x89PNG\r\n\x1a\n')
+          PY
+
+      - name: Upload temporary connector artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wg-r0b0e-r1-cp1-xfer-49c2
+          path: export/
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
