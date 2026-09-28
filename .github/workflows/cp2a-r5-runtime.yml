@@ -1,0 +1,137 @@
+name: CP2A R5 exact public runtime
+
+on:
+  push:
+    branches: [cp2a-r5-transfer-20260929]
+    paths: [.github/workflows/cp2a-r5-runtime.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    env:
+      GARMENTCODE_COMMIT: d449629979028123a5c4dc9e732a2ec19b7fce31
+      GARMENTCODE_TREE: fd422f0e3708f4d67f169cb2553fa38182601d44
+      GODOT_URL: https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+      GODOT_SHA256: cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4
+      PYTHON_VERSION: 3.9.25
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: maria-korosteleva/GarmentCode
+          ref: d449629979028123a5c4dc9e732a2ec19b7fce31
+          path: GarmentCode
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.9.25'
+
+      - name: Build exact relocatable provider runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(python -c 'import platform; print(platform.python_version())')" = "$PYTHON_VERSION"
+          test "$(git -C GarmentCode rev-parse HEAD)" = "$GARMENTCODE_COMMIT"
+          test "$(git -C GarmentCode rev-parse 'HEAD^{tree}')" = "$GARMENTCODE_TREE"
+          test -z "$(git -C GarmentCode status --porcelain)"
+          python -m pip install --disable-pip-version-check --no-input \
+            'numpy<2' scipy pyyaml svgwrite svgpathtools psutil matplotlib \
+            CairoSVG trimesh rtree pillow
+          python -m pip install --disable-pip-version-check --no-input --no-deps \
+            'pygarment==2.0.2'
+          test "$(python -c 'import importlib.metadata as m; print(m.version("pygarment"))')" = '2.0.2'
+          PYTHONPATH="$PWD/GarmentCode" python - <<'PY'
+          import importlib.util, platform
+          from pathlib import Path
+          assert platform.python_version() == '3.9.25'
+          assert importlib.util.find_spec('warp') is None
+          import cairosvg, matplotlib, pygarment, trimesh, rtree
+          assert Path(pygarment.__file__).resolve().is_relative_to(Path('GarmentCode').resolve())
+          print('exact source provider import PASS')
+          PY
+          git -C GarmentCode config --local --unset-all http.https://github.com/.extraheader || true
+          if git -C GarmentCode config --local --get-regexp '(^|\.)extraheader$'; then
+            echo 'checkout credential header remains' >&2
+            exit 1
+          fi
+          prefix="$(python -c 'import sys; print(sys.prefix)')"
+          mkdir -p /tmp/cp2a-runtime/provider
+          cp -a "$prefix" /tmp/cp2a-runtime/provider/python-3.9.25
+          cp -a GarmentCode /tmp/cp2a-runtime/provider/GarmentCode
+          cat > /tmp/cp2a-runtime/provider/run-python.sh <<'SH'
+          #!/usr/bin/env bash
+          set -euo pipefail
+          HERE="$(cd "$(dirname "$0")" && pwd)"
+          export LD_LIBRARY_PATH="$HERE/python-3.9.25/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+          exec "$HERE/python-3.9.25/bin/python3.9" "$@"
+          SH
+          chmod +x /tmp/cp2a-runtime/provider/run-python.sh
+          /tmp/cp2a-runtime/provider/run-python.sh - <<'PY'
+          import importlib.metadata as m, importlib.util, platform
+          assert platform.python_version() == '3.9.25'
+          assert m.version('pygarment') == '2.0.2'
+          assert importlib.util.find_spec('warp') is None
+          print('relocated provider runtime PASS')
+          PY
+
+      - name: Acquire exact Godot runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/cp2a-runtime/godot
+          curl -fL --retry 4 --retry-all-errors "$GODOT_URL" -o /tmp/cp2a-runtime/godot/Godot_v4.7.2-stable_linux.x86_64.zip
+          printf '%s  %s\n' "$GODOT_SHA256" /tmp/cp2a-runtime/godot/Godot_v4.7.2-stable_linux.x86_64.zip | sha256sum -c -
+          unzip -oq /tmp/cp2a-runtime/godot/Godot_v4.7.2-stable_linux.x86_64.zip -d /tmp/cp2a-runtime/godot/extracted
+          chmod +x /tmp/cp2a-runtime/godot/extracted/Godot_v4.7.2-stable_linux.x86_64
+          test "$(/tmp/cp2a-runtime/godot/extracted/Godot_v4.7.2-stable_linux.x86_64 --version | head -1)" = '4.7.2.stable.official.ed1daf0bf'
+
+      - name: Seal exact identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json, subprocess
+          root = Path('/tmp/cp2a-runtime')
+          def digest(path):
+              h = hashlib.sha256()
+              with path.open('rb') as f:
+                  for block in iter(lambda: f.read(1024 * 1024), b''):
+                      h.update(block)
+              return h.hexdigest()
+          godot_zip = root/'godot/Godot_v4.7.2-stable_linux.x86_64.zip'
+          godot_exe = root/'godot/extracted/Godot_v4.7.2-stable_linux.x86_64'
+          py = root/'provider/python-3.9.25/bin/python3.9'
+          receipt = {
+              'schema_version': 1,
+              'python_version': subprocess.check_output([str(root/'provider/run-python.sh'), '-c', 'import platform; print(platform.python_version())'], text=True).strip(),
+              'python_executable_sha256': digest(py),
+              'pygarment_version': '2.0.2',
+              'garmentcode_commit': 'd449629979028123a5c4dc9e732a2ec19b7fce31',
+              'garmentcode_tree': 'fd422f0e3708f4d67f169cb2553fa38182601d44',
+              'warp_present': False,
+              'checkout_extraheader_present': False,
+              'godot_archive_sha256': digest(godot_zip),
+              'godot_executable_sha256': digest(godot_exe),
+              'godot_version': subprocess.check_output([str(godot_exe), '--version'], text=True).strip(),
+          }
+          (root/'runtime_identity.json').write_text(json.dumps(receipt, indent=2, sort_keys=True) + '\n')
+          PY
+          tar --sort=name --mtime='UTC 2026-09-29' --owner=0 --group=0 --numeric-owner \
+            --zstd -C /tmp -cf /tmp/WG_OSS_R0A_CP2A_R5_RUNTIME.tar.zst cp2a-runtime
+          sha256sum /tmp/WG_OSS_R0A_CP2A_R5_RUNTIME.tar.zst > /tmp/WG_OSS_R0A_CP2A_R5_RUNTIME.sha256
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cp2a-r5-exact-runtime
+          path: |
+            /tmp/WG_OSS_R0A_CP2A_R5_RUNTIME.tar.zst
+            /tmp/WG_OSS_R0A_CP2A_R5_RUNTIME.sha256
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
