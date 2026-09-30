@@ -1,0 +1,23 @@
+name: R4D CP0 mount reset
+
+on:
+  push:
+    branches:
+      - r4d-cp0-transfer-20260930
+
+permissions:
+  contents: read
+
+jobs:
+  reset:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Create reset marker
+        run: |
+          printf '{"status":"reset"}\n' > reset.json
+      - name: Upload reset marker
+        uses: actions/upload-artifact@v4
+        with:
+          name: r4d-cp0-mount-reset
+          path: reset.json
+          retention-days: 1
