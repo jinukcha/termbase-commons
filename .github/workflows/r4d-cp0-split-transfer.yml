@@ -1,0 +1,67 @@
+name: R4D CP0 bounded input transfer
+
+on:
+  push:
+    branches:
+      - r4d-cp0-transfer-20260930
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  split:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      SOURCE_ARTIFACT_ID: '11070102583'
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Download preserved exact inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -o /tmp/exact-inputs.zip \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/$SOURCE_ARTIFACT_ID/zip"
+          mkdir -p /tmp/exact
+          unzip -q /tmp/exact-inputs.zip -d /tmp/exact
+          test "$(stat -c %s /tmp/exact/R4_AI_TRAINING_WHEELHOUSE.zip)" = '315712496'
+          echo 'b31c6a7cb83fc9e3ce5e881a75e887a80afd856f75ed9e17895326a55bfaece8  /tmp/exact/R4_AI_TRAINING_WHEELHOUSE.zip' | sha256sum -c -
+          test "$(stat -c %s /tmp/exact/Python-3.11.10-linux-x86_64.tar.gz)" = '69057202'
+          echo '5633593d57867c935a1639a15e4d7edc353cf6ba5cb5c9fa5327f104fb459a33  /tmp/exact/Python-3.11.10-linux-x86_64.tar.gz' | sha256sum -c -
+          echo 'b546b132e42d299bb82d41f4aabd07b9deb3b2260bfe388113001c1c839c5339  /tmp/exact/godot_rl_agents-f4b53921.zip' | sha256sum -c -
+          echo 'd1c9c765fc416f6bd03f2cb5e510256e0ed647bd30da6d68dab272b9e31294fb  /tmp/exact/godot_rl_agents_plugin-3984fd12.zip' | sha256sum -c -
+          mkdir -p parts/wheelhouse parts/python parts/meta
+          split -b 40M -d -a 2 /tmp/exact/R4_AI_TRAINING_WHEELHOUSE.zip parts/wheelhouse/part-
+          split -b 40M -d -a 2 /tmp/exact/Python-3.11.10-linux-x86_64.tar.gz parts/python/part-
+          cp /tmp/exact/godot_rl_agents-f4b53921.zip parts/meta/
+          cp /tmp/exact/godot_rl_agents_plugin-3984fd12.zip parts/meta/
+          cp /tmp/exact/materialization_manifest.json parts/meta/
+          find parts -type f -printf '%p %s\n' | sort
+
+      - uses: actions/upload-artifact@v4
+        with: {name: r4d-wheelhouse-00, path: parts/wheelhouse/part-00, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        with: {name: r4d-wheelhouse-01, path: parts/wheelhouse/part-01, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        with: {name: r4d-wheelhouse-02, path: parts/wheelhouse/part-02, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        with: {name: r4d-wheelhouse-03, path: parts/wheelhouse/part-03, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        with: {name: r4d-wheelhouse-04, path: parts/wheelhouse/part-04, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        with: {name: r4d-wheelhouse-05, path: parts/wheelhouse/part-05, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        with: {name: r4d-wheelhouse-06, path: parts/wheelhouse/part-06, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        with: {name: r4d-wheelhouse-07, path: parts/wheelhouse/part-07, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        with: {name: r4d-python-00, path: parts/python/part-00, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        with: {name: r4d-python-01, path: parts/python/part-01, compression-level: 0, retention-days: 1}
+      - uses: actions/upload-artifact@v4
+        with: {name: r4d-input-meta, path: parts/meta/*, compression-level: 0, retention-days: 1}
