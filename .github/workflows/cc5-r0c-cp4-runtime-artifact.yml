@@ -1,0 +1,40 @@
+name: CC5 R0C CP4 Exact Godot Runtime Artifact
+run-name: CC5 R0C CP4 exact Godot 4.7.2 artifact
+
+on:
+  push:
+    branches:
+      - cc5-r0c-cp4-handoff-20261015
+    paths:
+      - .github/workflows/cc5-r0c-cp4-runtime-artifact.yml
+
+permissions:
+  contents: read
+
+jobs:
+  runtime-artifact:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Download and verify exact official runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          name='Godot_v4.7.2-stable_linux.x86_64.zip'
+          url='https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip'
+          expected='cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4'
+          curl --fail --location --retry 3 --retry-delay 2 --output "$name" "$url"
+          actual="$(sha256sum "$name" | awk '{print $1}')"
+          test "$actual" = "$expected"
+          test "$(stat -c %s "$name")" = '77860424'
+          printf '%s  %s\n' "$actual" "$name" > SHA256SUMS.txt
+      - name: Upload exact runtime artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cc5-r0c-cp4-godot-4.7.2-linux-x86_64-exact
+          path: |
+            Godot_v4.7.2-stable_linux.x86_64.zip
+            SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
