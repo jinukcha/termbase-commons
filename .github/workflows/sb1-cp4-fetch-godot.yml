@@ -1,0 +1,31 @@
+name: SB1 CP4 Stage Godot 4.7.2
+
+on:
+  push:
+    branches:
+      - sb1-cp4-godot-bin-20261018
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  stage-godot:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Download official Godot Linux build
+        shell: bash
+        run: |
+          set -euo pipefail
+          url='https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip'
+          curl --fail --location --retry 5 --retry-delay 2 --output Godot_v4.7.2-stable_linux.x86_64.zip "$url"
+          printf '%s  %s\n' 'cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4' 'Godot_v4.7.2-stable_linux.x86_64.zip' | sha256sum --check --strict
+      - name: Upload verified binary archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: Godot_v4.7.2-stable_linux_x86_64
+          path: Godot_v4.7.2-stable_linux.x86_64.zip
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
