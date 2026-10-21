@@ -1,0 +1,44 @@
+name: One-shot HELI G28 R3-R2 exact Godot runtime artifact
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/one-shot-heli-g28-r3-r2-runtime.yml
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      ARCHIVE: Godot_v4.7.2-stable_linux.x86_64.zip
+      EXPECTED_SIZE: "77860424"
+      EXPECTED_ARCHIVE_SHA256: cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4
+      EXPECTED_BINARY_SHA256: 8d106cbe6144c2dc7e881d61d2429c1a8a76e6b22ef48bd5e48dcf934953f71e
+      EXPECTED_VERSION: 4.7.2.stable.official.ed1daf0bf
+    steps:
+      - name: Download and verify exact runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 5 --retry-all-errors -o "$ARCHIVE" \
+            https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          test "$(stat -c %s "$ARCHIVE")" = "$EXPECTED_SIZE"
+          echo "$EXPECTED_ARCHIVE_SHA256  $ARCHIVE" | sha256sum -c -
+          rm -rf exact_runtime
+          unzip -q "$ARCHIVE" -d exact_runtime
+          chmod +x exact_runtime/Godot_v4.7.2-stable_linux.x86_64
+          test "$(exact_runtime/Godot_v4.7.2-stable_linux.x86_64 --version)" = "$EXPECTED_VERSION"
+          echo "$EXPECTED_BINARY_SHA256  exact_runtime/Godot_v4.7.2-stable_linux.x86_64" | sha256sum -c -
+      - name: Upload exact verified archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: HELI_G28_R3_R2_Godot_v4.7.2-stable_linux.x86_64
+          path: Godot_v4.7.2-stable_linux.x86_64.zip
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
